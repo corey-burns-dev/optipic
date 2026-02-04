@@ -4,3 +4,5 @@ pre-push:
       run: bun run build
     lint:
       run: bun run lint
+    format:
+      run: bun run format
