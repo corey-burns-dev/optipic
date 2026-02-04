@@ -269,12 +269,18 @@ export async function POST(request: NextRequest) {
 
     if (outputs.length === 1) {
       const file = outputs[0];
-      return new Response(file.buffer, {
+      return new Response(
+        file.buffer.buffer.slice(
+          file.buffer.byteOffset,
+          file.buffer.byteOffset + file.buffer.byteLength
+        ),
+        {
         headers: {
           "Content-Type": file.mime,
           "Content-Disposition": `attachment; filename="${file.name}"`,
         },
-      });
+        }
+      );
     }
 
     const archive = archiver("zip", { zlib: { level: 9 } });
@@ -296,12 +302,18 @@ export async function POST(request: NextRequest) {
 
     const zipBuffer = Buffer.concat(chunks);
 
-    return new Response(zipBuffer, {
+    return new Response(
+      zipBuffer.buffer.slice(
+        zipBuffer.byteOffset,
+        zipBuffer.byteOffset + zipBuffer.byteLength
+      ),
+      {
       headers: {
         "Content-Type": "application/zip",
         "Content-Disposition": `attachment; filename="optipic-export.zip"`,
       },
-    });
+      }
+    );
   } catch (error) {
     console.error("convert failed", error);
     return Response.json(
