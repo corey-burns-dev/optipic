@@ -1,6 +1,7 @@
 "use client";
 
 import { type DragEvent, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import ThemeToggle from "./components/theme-toggle";
 
 type Preset = "tiny" | "small" | "balanced" | "crisp" | "custom";
@@ -383,9 +384,12 @@ export default function Home() {
                   className="glass flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 px-4 py-3 text-sm"
                 >
                   <div className="flex items-center gap-4">
-                    <img
+                    <Image
                       src={item.url}
                       alt={item.file.name}
+                      width={48}
+                      height={48}
+                      unoptimized
                       className="h-12 w-12 rounded-xl object-cover"
                     />
                     <div>

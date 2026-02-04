@@ -14,20 +14,20 @@ function getSystemTheme(): Theme {
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "light";
+    const saved = localStorage.getItem(storageKey) as Theme | null;
+    return saved ?? getSystemTheme();
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey) as Theme | null;
-    const initial = saved ?? getSystemTheme();
-    setTheme(initial);
-    document.documentElement.dataset.theme = initial;
-  }, []);
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem(storageKey, theme);
+  }, [theme]);
 
   const toggle = () => {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem(storageKey, next);
   };
 
   return (
