@@ -140,9 +140,7 @@ function encodeWithQuality(
         compression: "lzw",
       });
     case "gif":
-      return pipeline.gif({
-        reoptimise: true,
-      });
+      return pipeline.gif();
     default:
       return pipeline.jpeg({ quality });
   }
