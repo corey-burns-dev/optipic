@@ -2,3 +2,5 @@ pre-push:
   commands:
     build:
       run: bun run build
+    lint:
+      run: bun run lint
