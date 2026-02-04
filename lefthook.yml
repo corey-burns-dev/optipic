@@ -2,7 +2,5 @@ pre-push:
   commands:
     build:
       run: bun run build
-    build_worker:
-      run: bun run build:worker
     lint:
       run: bun run lint
