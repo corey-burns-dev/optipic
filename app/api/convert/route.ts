@@ -1,7 +1,7 @@
 import archiver from "archiver";
 import type { NextRequest } from "next/server";
+import { PassThrough } from "node:stream";
 import sharp from "sharp";
-import { PassThrough } from "stream";
 
 type OutputFormat = "auto" | "jpeg" | "jpg" | "png" | "webp" | "avif" | "tiff" | "gif";
 
@@ -36,7 +36,7 @@ function toBoolean(value: FormDataEntryValue | null) {
 
 function getExtension(name: string) {
   const parts = name.split(".");
-  return parts.length > 1 ? parts.pop()!.toLowerCase() : "";
+  return parts.length > 1 ? (parts.pop()?.toLowerCase() ?? "") : "";
 }
 
 function normalizeFormat(format: OutputFormat, fallback: string) {

@@ -24,18 +24,22 @@ function toBoolean(value: FormDataEntryValue | null) {
 
 function getExtension(name: string) {
   const parts = name.split(".");
-  return parts.length > 1 ? parts.pop()!.toLowerCase() : "";
+  return parts.length > 1 ? (parts.pop() ?? "").toLowerCase() : "";
 }
 
-function normalizeFormat(format: OutputFormat, fallback: string) {
+function normalizeFormat(
+  format: OutputFormat,
+  fallback?: string
+): Exclude<OutputFormat, "auto"> {
+  const normalizedFallback = fallback ?? "";
   if (format === "auto") {
-    if (fallback === "jpeg") return "jpeg";
-    if (fallback === "jpg") return "jpeg";
-    if (fallback === "png") return "png";
-    if (fallback === "webp") return "webp";
-    if (fallback === "avif") return "avif";
-    if (fallback === "tiff") return "tiff";
-    if (fallback === "gif") return "gif";
+    if (normalizedFallback === "jpeg") return "jpeg";
+    if (normalizedFallback === "jpg") return "jpeg";
+    if (normalizedFallback === "png") return "png";
+    if (normalizedFallback === "webp") return "webp";
+    if (normalizedFallback === "avif") return "avif";
+    if (normalizedFallback === "tiff") return "tiff";
+    if (normalizedFallback === "gif") return "gif";
     return "jpeg";
   }
   if (format === "jpg") return "jpeg";
@@ -193,8 +197,13 @@ export async function POST(request: NextRequest) {
         const buffer = await fileToBuffer(file);
         const inputExt = getExtension(file.name);
         const outputFormat = normalizeFormat(requestedFormat, inputExt);
-        const hasAlphaFormats = ["png", "webp", "avif", "gif"];
-        const shouldFlatten = flatten && !hasAlphaFormats.includes(outputFormat);
+        const alphaFormats = new Set<Exclude<OutputFormat, "auto">>([
+          "png",
+          "webp",
+          "avif",
+          "gif",
+        ]);
+        const shouldFlatten = flatten && !alphaFormats.has(outputFormat);
 
         const encoderOptions = {
           width: resizeWidth || undefined,
