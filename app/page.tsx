@@ -288,7 +288,7 @@ export default function Home() {
             </div>
             <div>
               <div className="font-display text-xl font-semibold tracking-tight">
-                OptiPic Studio
+                🪄 Image Mage 📸
               </div>
               <div className="text-sm text-(--muted)">
                 Convert, compress, and export in one flow
