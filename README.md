@@ -1,36 +1,44 @@
 # Image Mage
 
-Image Mage is a single-page app for fast image conversion and compression.
+Image Mage is a web app for batch image conversion and compression with practical presets, format controls, and downloadable exports.
 
 ## Features
 
-- Convert between common image formats
-- Compression presets for web-ready assets
-- Batch-friendly, clean workflow
+- Drag-and-drop multi-file upload
+- Convert between JPEG, PNG, WebP, AVIF, TIFF, and GIF
+- Quality presets (`tiny`, `small`, `balanced`, `crisp`) plus custom quality
+- Optional target-size mode (KB) with iterative quality tuning
+- Resize controls (`inside`, `cover`, `contain`)
+- Metadata toggle, flatten/background options, lossless/progressive options
+- ZIP export for multi-file jobs
+- Size estimation endpoint before conversion
 
-## Tech
+## Tech Stack
 
-- Next.js App Router
-- Tailwind CSS
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Sharp
+- OpenNext + Cloudflare Workers
 
 ## Getting Started
 
 ```bash
 bun install
-bun dev
+bun run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Open `http://localhost:3000`.
 
 ## Scripts
 
 ```bash
-bun dev
-bun build
-bun start
-bun lint
+bun run dev
+bun run build
+bun run build:workers
+bun run deploy
+bun run typecheck
+bun run lint
+bun run biome
 ```
-
-## License
-
-MIT
