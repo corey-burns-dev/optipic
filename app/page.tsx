@@ -43,17 +43,9 @@ type Estimate = {
   outputSize: number;
 };
 
-function formatBytes(bytes: number) {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${(bytes / k ** i).toFixed(1)} ${sizes[i]}`;
-}
+import { formatBytes, formatPercent } from "@/lib/utils";
 
-function formatPercent(value: number) {
-  return `${Math.round(value)}%`;
-}
+// ... (keep types) ...
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -103,7 +95,7 @@ export default function Home() {
     ]);
   };
 
-  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setIsDragOver(false);
     if (event.dataTransfer?.files?.length) {
@@ -277,7 +269,7 @@ export default function Home() {
       {/* Background Gradients */}
       <div className="pointer-events-none absolute -top-32 left-1/2 h-130 w-130 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,var(--glow),transparent_70%)] opacity-50 blur-3xl" />
 
-      <div className="relative flex min-h-screen flex-col justify-center px-4 pt-4 pb-4">
+      <div className="relative flex min-h-screen flex-col justify-center p-4">
         {/* Header */}
         <header className="mb-4 flex shrink-0 items-center justify-between">
           <div className="flex items-center gap-2">
@@ -300,7 +292,7 @@ export default function Home() {
                 <div className="text-[9px] font-bold tracking-tighter text-(--muted) uppercase">
                   Files
                 </div>
-                <div className="text-[11px] leading-none font-semibold">
+                <div className="font-mono text-[11px] leading-none font-semibold">
                   {files.length}
                 </div>
               </div>
@@ -308,7 +300,7 @@ export default function Home() {
                 <div className="text-[9px] font-bold tracking-tighter text-(--muted) uppercase">
                   Size
                 </div>
-                <div className="text-[11px] leading-none font-semibold">
+                <div className="font-mono text-[11px] leading-none font-semibold">
                   {formatBytes(totalInputSize)}
                 </div>
               </div>
@@ -338,9 +330,8 @@ export default function Home() {
         <main className="grid flex-1 gap-4 lg:grid-cols-12">
           {/* Left Panel: Files & Upload */}
           <section className="flex flex-col gap-3 lg:col-span-3">
-            <div
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
               className={`glass group relative flex h-32 w-full shrink-0 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-white/5 p-3 text-center transition-all ${
                 isDragOver ? "border-(--sea) bg-(--sea)/5" : "hover:border-white/20"
               } ${status === "processing" ? "animate-pulse-soft" : ""}`}
@@ -352,12 +343,6 @@ export default function Home() {
               onDragEnter={() => setIsDragOver(true)}
               onDragLeave={() => setIsDragOver(false)}
               onClick={() => inputRef.current?.click()}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  inputRef.current?.click();
-                }
-              }}
             >
               <div className="text-xl transition-transform group-hover:scale-110">📤</div>
               <div className="text-[10px] font-bold tracking-widest text-(--muted) uppercase">
@@ -377,7 +362,7 @@ export default function Home() {
                   }
                 }}
               />
-            </div>
+            </button>
 
             <div className="glass flex min-h-50 flex-1 flex-col rounded-xl">
               <div className="flex shrink-0 items-center justify-between border-b border-white/5 px-3 py-2">
@@ -419,7 +404,7 @@ export default function Home() {
                             <div className="truncate text-[10px]/tight leading-tight font-bold">
                               {item.file.name}
                             </div>
-                            <div className="text-[9px] text-(--muted)">
+                            <div className="font-mono text-[9px] text-(--muted)">
                               {formatBytes(item.file.size)}
                             </div>
                           </div>
@@ -516,7 +501,7 @@ export default function Home() {
                     >
                       Quality
                     </label>
-                    <span className="text-[10px] font-bold">{quality}%</span>
+                    <span className="font-mono text-[10px] font-bold">{quality}%</span>
                   </div>
                   <input
                     id="quality-slider"
@@ -546,7 +531,7 @@ export default function Home() {
                       placeholder="Auto"
                       value={targetSizeKB}
                       onChange={(e) => setTargetSizeKB(e.target.value)}
-                      className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-xs font-semibold transition outline-none focus:border-(--sea)/50"
+                      className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 font-mono text-xs font-semibold transition outline-none focus:border-(--sea)/50"
                     />
                     <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[10px] font-bold text-(--muted)">
                       KB
@@ -623,7 +608,7 @@ export default function Home() {
                         value={width}
                         onChange={(e) => setWidth(e.target.value)}
                         placeholder="Auto"
-                        className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-xs font-bold transition outline-none focus:border-(--sea)/50"
+                        className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 font-mono text-xs font-bold transition outline-none focus:border-(--sea)/50"
                       />
                       <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] font-bold text-(--muted)">
                         PX
@@ -644,7 +629,7 @@ export default function Home() {
                         value={height}
                         onChange={(e) => setHeight(e.target.value)}
                         placeholder="Auto"
-                        className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-xs font-bold transition outline-none focus:border-(--sea)/50"
+                        className="w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 font-mono text-xs font-bold transition outline-none focus:border-(--sea)/50"
                       />
                       <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] font-bold text-(--muted)">
                         PX
@@ -755,7 +740,7 @@ export default function Home() {
                     <span className="text-[9px] font-bold tracking-widest text-(--sea) uppercase">
                       Success
                     </span>
-                    <span className="text-[10px] font-bold">
+                    <span className="font-mono text-[10px] font-bold">
                       {formatBytes(result.size)}
                     </span>
                   </div>

@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import sharp from "sharp";
+import { getExtension, safeNumber, toBoolean } from "@/lib/utils";
 
 type OutputFormat = "auto" | "jpeg" | "jpg" | "png" | "webp" | "avif" | "tiff" | "gif";
 
@@ -11,21 +12,6 @@ const presetQuality: Record<Preset, number> = {
   balanced: 75,
   crisp: 88,
 };
-
-function safeNumber(value: FormDataEntryValue | null, fallback: number) {
-  if (!value) return fallback;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-function toBoolean(value: FormDataEntryValue | null) {
-  return value === "true" || value === "1";
-}
-
-function getExtension(name: string) {
-  const parts = name.split(".");
-  return parts.length > 1 ? (parts.pop() ?? "").toLowerCase() : "";
-}
 
 function normalizeFormat(
   format: OutputFormat,
